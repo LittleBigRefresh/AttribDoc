@@ -2,5 +2,7 @@ namespace AttribDoc;
 
 public class Documentation
 {
-    public readonly List<Route> Routes = new();
+    internal Documentation() {}
+    
+    public List<Route> Routes { get; internal set; } = null!;
 }
