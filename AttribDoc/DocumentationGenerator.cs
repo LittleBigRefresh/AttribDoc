@@ -55,6 +55,14 @@ public class DocumentationGenerator
         {
             attribute.AddDataToRouteDocumentation(method, route);
         }
+        
+        foreach (ParameterInfo param in method.GetParameters())
+        {
+            DocSummaryAttribute? attribute = param.GetCustomAttribute<DocSummaryAttribute>();
+            if(attribute == null) continue;
+            
+            route.Parameters.Add(new Parameter(param.Name, ParameterType.Route, attribute.Summary));
+        }
 
         return route;
     }

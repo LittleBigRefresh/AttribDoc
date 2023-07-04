@@ -10,7 +10,7 @@ public class DocSummaryAttribute : DocAttribute
         this.Summary = summary;
     }
 
-    private string Summary { get; }
+    internal string Summary { get; }
     
     public override void AddDataToRouteDocumentation(MethodInfo method, Route route)
     {
