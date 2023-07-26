@@ -1,5 +1,6 @@
 namespace AttribDoc;
 
+[Serializable]
 public class Route
 {
     public string Method { get; set; }
@@ -10,4 +11,7 @@ public class Route
 
     public List<Parameter> Parameters { get; set; } = new();
     public List<Error> PotentialErrors { get; set; } = new();
+    
+    public object? ExampleRequestBody { get; set; }
+    public object? ExampleResponse { get; set; }
 }
