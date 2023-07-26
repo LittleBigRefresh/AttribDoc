@@ -77,3 +77,80 @@ public class DocCustomAttribute : DocAttribute
     }
 }
 ```
+
+## Request/Response bodies
+As of v1.1.0, you can now include request/response bodies. You can do this a couple ways:
+
+- A normal string
+```csharp
+[DocSummary("Returns the string Hello World!")]
+[DocResponseBody("Hello World!")]
+public static string HelloWorld() => "Hello World!";
+```
+```json
+{
+  "Method": "GET",
+  "RouteUri": "/helloworld",
+  "Summary": "Returns the string Hello World!",
+  "AuthenticationRequired": false,
+  "Parameters": [],
+  "PotentialErrors": [],
+  "ExampleRequestBody": null,
+  "ExampleResponse": "Hello World!"
+}
+```
+
+- Specifying a type to be instantiated
+```csharp
+[DocSummary("Adds FirstNumber to SecondNumber.")]
+[DocError(typeof(NotImplementedException), "A number is negative")]
+[DocRequestBody(typeof(AddBody))]
+public static int AddWithBody(AddBody body) => Add(body.FirstNumber, body.SecondNumber);
+```
+```json
+{
+  "Method": "GET",
+  "RouteUri": "/addwithbody",
+  "Summary": "Adds FirstNumber to SecondNumber.",
+  "AuthenticationRequired": false,
+  "Parameters": [],
+  "PotentialErrors": [
+    {
+      "Name": "NotImplementedException",
+      "OccursWhen": "A number is negative"
+    }
+  ],
+  "ExampleRequestBody": {
+    "FirstNumber": 0,
+    "SecondNumber": 0
+  },
+  "ExampleResponse": null
+}
+```
+
+- Specifying a field on a type to be used
+```csharp
+[DocSummary("Retrieves the current weather in your area")]
+[DocResponseBody(typeof(Weather), nameof(Weather.Example))]
+public static Weather GetWeather()
+    => new()
+    {
+        Temperature = 69,
+        IsFahrenheit = true
+    };
+```
+```json
+{
+  "Method": "GET",
+  "RouteUri": "/getweather",
+  "Summary": "Retrieves the current weather in your area",
+  "AuthenticationRequired": false,
+  "Parameters": [],
+  "PotentialErrors": [],
+  "ExampleRequestBody": null,
+  "ExampleResponse": {
+    "Temperature": 21,
+    "IsFahrenheit": false
+  }
+}
+```
