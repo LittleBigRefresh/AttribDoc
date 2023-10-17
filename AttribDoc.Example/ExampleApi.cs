@@ -20,6 +20,8 @@ public static class ExampleApi
 
     [DocSummary("Adds FirstNumber to SecondNumber.")]
     [DocError(typeof(NotImplementedException), "A number is negative")]
+    [DocCustomInfo("test", "Custom information")]
+    [DocCustomInfo("test2", 42)]
     [DocRequestBody(typeof(AddBody))]
     public static int AddWithBody(AddBody body) => Add(body.FirstNumber, body.SecondNumber);
 

@@ -154,3 +154,57 @@ public static Weather GetWeather()
   }
 }
 ```
+
+# Custom information
+
+As of v1.2.0, you can also include objects to include in a key/value pair to be included in the object.
+
+The easiest way is to simply use the `DocCustomInfo` attribute:
+
+```csharp
+    [DocSummary("Adds FirstNumber to SecondNumber.")]
+    [DocError(typeof(NotImplementedException), "A number is negative")]
+    [DocCustomInfo("test", "Custom information")]
+    [DocCustomInfo("test2", 42)]
+    [DocRequestBody(typeof(AddBody))]
+    public static int AddWithBody(AddBody body) => Add(body.FirstNumber, body.SecondNumber);
+```
+
+You can also do this from a custom attribute:
+
+```csharp
+public class DocCustomAttribute : DocAttribute
+{
+    public override void AddDataToRouteDocumentation(MethodInfo method, Route route)
+    {
+        route.ExtraProperties.Add("Test", 42);
+    }
+}
+```
+
+Either method will result in something like this:
+
+```json
+{
+  "Method": "GET",
+  "RouteUri": "/addwithbody",
+  "Summary": "Adds FirstNumber to SecondNumber.",
+  "AuthenticationRequired": false,
+  "Parameters": [],
+  "PotentialErrors": [
+    {
+      "Name": "NotImplementedException",
+      "OccursWhen": "A number is negative"
+    }
+  ],
+  "ExtraProperties": {
+    "test": "Custom information",
+    "test2": 42
+  },
+  "ExampleRequestBody": {
+    "FirstNumber": 0,
+    "SecondNumber": 0
+  },
+  "ExampleResponse": null
+}
+```
