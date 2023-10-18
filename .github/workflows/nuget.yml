@@ -12,24 +12,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
+
       - name: Restore
         run: dotnet restore
+
       - name: Set VERSION variable from tag (for tag pushes)
-        if: contains(github.ref, 'refs/heads')
+        if: ${{ contains(github.ref, 'refs/tags') }}
         run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
       - name: Set VERSION variable from tag (for normal commits)
-        if: !contains(github.ref, 'refs/heads')
+        if: ${{ !contains(github.ref, 'refs/tags') }}
         run: echo "VERSION=0.0.0" >> $GITHUB_ENV
+
       - name: Build
         run: dotnet build -c Release --no-restore /p:Version=${VERSION} /p:PackageVersion=${VERSION}
-#      - name: Test
-#        run: dotnet test -c Release --no-restore --no-build
+        
       - name: Pack
         run: dotnet pack -c Release /p:Version=${VERSION} --no-restore
+
       - name: Upload Package
         run: dotnet nuget push AttribDoc/bin/Release/AttribDoc.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
         env:
