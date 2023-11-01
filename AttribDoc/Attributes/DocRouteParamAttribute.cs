@@ -2,6 +2,7 @@ using System.Reflection;
 
 namespace AttribDoc.Attributes;
 
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public class DocRouteParamAttribute : DocAttribute
 {
     public DocRouteParamAttribute(string parameterName, string summary)
